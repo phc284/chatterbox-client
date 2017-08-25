@@ -26,7 +26,7 @@ describe('chatterbox', function() {
       it('should have a send method', function() {
         expect(app.send).to.be.ok;
       });
-
+      
       it('should submit a POST request via $.ajax', function(done) {
         app.send([]);
         expect($.ajax.calledOnce).to.be.true;
