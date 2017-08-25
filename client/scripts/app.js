@@ -14,11 +14,11 @@ var app = {
   init: function() {
     
   },
-  send: function(val) {
+  send: function(text) {
     $.ajax({
       type: 'POST',
       url: this.server,  
-      data: JSON.stringify(val),
+      data: text,
       contentType: 'application/json',
       success: function (data) {
         console.log('chatterbox: Message sent');
@@ -37,7 +37,7 @@ var app = {
       success: function(messages) {
         //console.log(messages);
         messages.results.forEach(function(obj) {
-          console.log(obj);
+          //console.log(obj);
           app.renderMessage(obj);
         });
       }
@@ -50,13 +50,25 @@ var app = {
   
   renderMessage: function (obj) {  
     console.log(obj);
-    $('#chats').append('<ul class="chat">@' + obj.username + ': ' + obj.text + '</ul>');
+    $('#chats').append('<ul class="chat">@' + '<a class="username" href="#">' + obj.username + ': ' + '</a>' + obj.text + '</ul>');
+    //$('#chats').append('<ul>' + obj.text + '</ul>');
+
     //double check to see if supposed to be <p>
   },
   
   renderRoom: function (roomName) {
     $('#roomSelect').append('<div id="' + roomName + '"> </div>');
-  }
+  },
+  
+  handleUserNameClick: function() {}
 
 };
+
+
+$('#send').on('click', function (e) {
+  e.preventDefault();
+  console.log('clicked');
+  var text = $('#text').val();
+  app.send(text);
+});
 
