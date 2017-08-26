@@ -13,23 +13,46 @@ var app = {
    
   init: function() {
     
+    app.fetch();
+    app.handleSubmit();
+    app.handleUsernameClick();
+    
   },
-  send: function(text) {
+  
+  handleSubmit: function() {
+    
+    $('#send').on('click', function (e) {
+      console.log('clicked');
+      var text = $('#text').val();
+      var username = window.location.search.slice(window.location.search.indexOf('=') + 1);
+      var message = {
+        username: username,
+        text: text,
+        roomname: undefined
+      };
+      app.send(message);
+      e.preventDefault();
+    });
+  },
+  
+  send: function(message) {
     $.ajax({
       type: 'POST',
       url: this.server,  
-      data: text,
+      data: message,
       contentType: 'application/json',
-      success: function (data) {
+      
+      success: function (message) {
         console.log('chatterbox: Message sent');
       },
-      error: function (data) {
+      error: function (message) {
     // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-        console.error('chatterbox: Failed to send message', data);
+        console.error('chatterbox: Failed to send message', message);
       }
 
     });
   },
+  
   fetch: function() {
     $.ajax({
       type: 'GET',
@@ -37,7 +60,7 @@ var app = {
       success: function(messages) {
         //console.log(messages);
         messages.results.forEach(function(obj) {
-          //console.log(obj);
+          console.log(obj);
           app.renderMessage(obj);
         });
       }
@@ -49,7 +72,7 @@ var app = {
   },
   
   renderMessage: function (obj) {  
-    console.log(obj);
+    //console.log(obj);
     $('#chats').append('<ul class="chat">@' + '<a class="username" href="#">' + obj.username + ': ' + '</a>' + obj.text + '</ul>');
     //$('#chats').append('<ul>' + obj.text + '</ul>');
 
@@ -60,15 +83,18 @@ var app = {
     $('#roomSelect').append('<div id="' + roomName + '"> </div>');
   },
   
-  handleUserNameClick: function() {}
+  handleUsernameClick: function() {
+    $('a').on('click', function(e) {
+      alert('clicked');
+    });
+  }
 
 };
 
+//Work on fixing send error 400
+//Need to fix 'handleUsernameClick', event handler not working when clicking on username
+//Work on adding friends to current user
+//Work on adding a roomName drop down and adding new rooms
 
-$('#send').on('click', function (e) {
-  e.preventDefault();
-  console.log('clicked');
-  var text = $('#text').val();
-  app.send(text);
-});
+
 
